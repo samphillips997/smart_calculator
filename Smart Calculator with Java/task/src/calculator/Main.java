@@ -15,6 +15,11 @@ public class Main {
                 break;
             }
 
+            if (input.equals("/help")) {
+                System.out.println("The program calculates the sum of numbers");
+                continue;
+            }
+
             // if 2 numbers are input -> add
             if (input.contains(" ")) {
                 int[] numbers = convertStringToIntArray(input);
