@@ -29,12 +29,10 @@ public class Main {
 
             }
 
-
-
             String expression = convertInputToExpression(input);
 
-            // filter for arithmetic expression
-            if (expression.matches("([-+]?\\d+([+-]+\\d+)+)")) {
+            // filter for arithmetic expression or single number
+            if (expression.matches("([-+]?\\d+([+-]+\\d+)+)|([-+]?\\d+)")) {
                 System.out.println(calculate(expression));
 
             } else if (!(input.isEmpty())) { // do nothing if no input, print if one input
