@@ -1,7 +1,10 @@
 package calculator;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
 
@@ -10,46 +13,65 @@ public class Main {
         while (true) {
             String input = scanner.nextLine();
 
-            if (input.equals("/exit")) {
-                System.out.println("Bye!");
-                break;
+            // menu options
+            if (input.matches("/\\w*")) {
+
+                if (input.equals("/exit")) {
+                    System.out.println("Bye!");
+                    break;
+                } else if (input.equals("/help")) {
+                    System.out.println("The program calculates the sum of numbers");
+                    continue;
+                } else {
+                    System.out.println("Unknown command");
+                    continue;
+                }
+
             }
 
-            if (input.equals("/help")) {
-                System.out.println("The program calculates the sum of numbers");
-                continue;
-            }
 
-            // if 2 numbers are input -> add
-            if (input.contains(" ")) {
-                int[] numbers = convertStringToIntArray(input);
 
-                System.out.println(sumIntArray(numbers));
+            String expression = convertInputToExpression(input);
+
+            // filter for arithmetic expression
+            if (expression.matches("([-+]?\\d+([+-]+\\d+)+)")) {
+                System.out.println(calculate(expression));
+
             } else if (!(input.isEmpty())) { // do nothing if no input, print if one input
-                System.out.println(input);
+                System.out.println("Invalid expression");
             }
         }
 
     }
 
-    public static int[] convertStringToIntArray(String input) {
-        String[] elements = input.split(" ");
-        int[] numbers = new int[elements.length];
+    // convert input into expression
+    public static String convertInputToExpression(String input) {
 
-        for (int i = 0; i < elements.length; i++) {
-            numbers[i] = Integer.parseInt(elements[i]);
-        }
+        return input.replaceAll("\\s", "") // remove spaces
+                .replaceAll("--", "+") // replace double negative
+                .replaceAll("\\+{2,}", "+"); // replace multiple plus signs
 
-        return numbers;
     }
 
-    public static int sumIntArray(int[] numbers) {
-        int sum = 0;
+    // finds all tokens positive or negative and then adds them together
+    public static int calculate(String expression) {
 
-        for (int number : numbers) {
-            sum += number;
+        String regex = "-?\\d+";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(expression);
+
+        List<Integer> numbers = new ArrayList<>();
+        while (matcher.find()) {
+            numbers.add(Integer.parseInt(matcher.group()));
         }
 
-        return sum;
+        int result = 0;
+
+        for (Integer number : numbers) {
+            result += number;
+        }
+
+        return result;
     }
+
 }
