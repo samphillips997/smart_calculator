@@ -29,8 +29,6 @@ public class Main {
 
             }
 
-
-
             String expression = convertInputToExpression(input);
 
             // variable assignment
@@ -38,30 +36,36 @@ public class Main {
                 var list = Arrays.asList(expression.split("="));
 
                 // variable = number
-                if (input.matches("[a-zA-Z]+=\\d+")) {
+                if (expression.matches("[a-zA-Z]+=\\d+")) {
                     varMap.put(list.get(0), Integer.valueOf(list.get(1)));
 
                 // variable = variable
-                } else if (input.matches("[a-zA-Z]+=[a-zA-Z]+")) {
+                } else if (expression.matches("[a-zA-Z]+=[a-zA-Z]+")) {
                     addNameVarToMap(varMap, list.get(0), list.get(1));
 
-                } else if (list.get(0).matches(".*\\d.*")) {
+                } else if (list.get(0).matches(".*\\d.*")) { // check left side for invalid varName
                     System.out.println("Invalid identifier");
                 } else {
                     System.out.println("Invalid assignment");
                 }
 
-                System.out.println(varMap);
                 continue;
             }
 
             // filter for arithmetic expression or single number
-            if (expression.matches("([-+]?\\d+([+-]+\\d+)+)|([-+]?\\d+)")) {
+            if (expression.matches("([-+]?\\w+([+-]+\\w+)+)|([-+]?\\d+)")) {
 
-                System.out.println(calculate(expression));
+                List<String> vars = returnVarsFromExpression(expression);
+                String newExpression = replaceVarsWithNums(expression, varMap, vars);
 
-            } else if (!(input.isEmpty())) { // do nothing if no input, print if one input
-                fetchValueFromMap(varMap, expression);
+                System.out.println(calculate(newExpression));
+
+            } else if (!(input.isEmpty())) {
+                if (input.matches(".*\\d.*")) {
+                    System.out.println("Invalid identifier");
+                } else {
+                    fetchValueFromMap(varMap, expression);
+                }
             }
         }
 
@@ -112,6 +116,28 @@ public class Main {
         } else {
             System.out.println("Unknown variable");
         }
+    }
+
+    public static List<String> returnVarsFromExpression(String expression) {
+        List<String> vars = new ArrayList<>();
+
+        for (int i = 0; i < expression.length(); i++) {
+            if (Character.isLetter(expression.charAt(i))) {
+                vars.add(String.valueOf(expression.charAt(i)));
+            }
+        }
+
+        return vars;
+    }
+
+    public static String replaceVarsWithNums(String expression, Map<String, Integer> map, List<String> vars) {
+        for (String var : vars) {
+            if (expression.contains(var)) {
+                expression = expression.replace(var, String.valueOf(map.get(var)));
+            }
+        }
+
+        return expression;
     }
 
 }
