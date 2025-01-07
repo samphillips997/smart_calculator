@@ -3,6 +3,7 @@ package calculator;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import calculator.Postfix;
 
 public class Main {
 
@@ -14,6 +15,7 @@ public class Main {
             String input = scanner.nextLine();
 
             // menu options
+            // can I put this in its own method
             if (input.matches("/\\w*")) {
 
                 if (input.equals("/exit")) {
@@ -53,12 +55,12 @@ public class Main {
             }
 
             // filter for arithmetic expression or single number
-            if (expression.matches("([-+]?\\w+([+-]+\\w+)+)|([-+]?\\d+)")) {
+            if (expression.matches("([-+]?\\w+([-+*/]+\\w+)+)|([-+]?\\d+)")) {
 
                 List<String> vars = returnVarsFromExpression(expression);
                 String newExpression = replaceVarsWithNums(expression, varMap, vars);
 
-                System.out.println(calculate(newExpression));
+                System.out.println(Postfix.calculatePostfix(Postfix.convertToPostfix(newExpression)));
 
             } else if (!(input.isEmpty())) {
                 if (input.matches(".*\\d.*")) {
@@ -71,7 +73,7 @@ public class Main {
 
     }
 
-    // convert input into expression
+    // remove whitespace, replace double negative and multiple positive signs
     public static String convertInputToExpression(String input) {
 
         return input.replaceAll("\\s", "") // remove spaces
