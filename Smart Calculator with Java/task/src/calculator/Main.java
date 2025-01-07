@@ -3,8 +3,12 @@ package calculator;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import calculator.Postfix;
 
+/* TODO
+    * handle parentheses - New RegEx
+    * negative numbers
+    * multi-digit numbers
+*/
 public class Main {
 
     public static void main(String[] args) {
@@ -15,7 +19,7 @@ public class Main {
             String input = scanner.nextLine();
 
             // menu options
-            // can I put this in its own method
+            // can I put this in its own method?
             if (input.matches("/\\w*")) {
 
                 if (input.equals("/exit")) {
@@ -90,6 +94,8 @@ public class Main {
         }
     }
 
+
+    @Deprecated
     // finds all tokens positive or negative and then adds them together
     public static int calculate(String expression) {
 
