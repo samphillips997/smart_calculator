@@ -28,7 +28,7 @@ public class Postfix {
                 stack.offerFirst(currentInputChar);
 
                 // 3. if incoming operator has higher priority -> push to stack
-            } else if (operatorPriority.containsKey(currentInputChar) && (operatorPriority.get(currentInputChar) >= operatorPriority.get(stack.peek()))) {
+            } else if (operatorPriority.containsKey(currentInputChar) && (operatorPriority.get(currentInputChar) > operatorPriority.get(stack.peek()))) {
                 stack.offerFirst(currentInputChar);
             }
             // 4. if priority of incoming operator is <= top of the stack, pop stack and add operators to result until top
@@ -60,7 +60,12 @@ public class Postfix {
         return output.toString();
     }
 
-    public static int calculatePostfix(String expression) {
+    public static int calculatePostfix(String expression) throws ArithmeticException {
+        // there should be no parenthesis in postfix
+        if (expression.contains("(") || expression.contains(")")) {
+            throw new ArithmeticException();
+        }
+
         Deque<Integer> stack = new ArrayDeque<>();
 
         List<Character> operators = Arrays.asList('+', '-', '*', '/', '^');

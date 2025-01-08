@@ -5,7 +5,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /* TODO
-    * handle parentheses - New RegEx
     * negative numbers
     * multi-digit numbers
 */
@@ -42,7 +41,7 @@ public class Main {
                 var list = Arrays.asList(expression.split("="));
 
                 // variable = number
-                if (expression.matches("[a-zA-Z]+=\\d+")) {
+                if (expression.matches("[a-zA-Z]+=-*\\d+")) {
                     varMap.put(list.get(0), Integer.valueOf(list.get(1)));
 
                 // variable = variable
@@ -58,13 +57,25 @@ public class Main {
                 continue;
             }
 
-            // filter for arithmetic expression or single number
-            if (expression.matches("([-+]?\\w+([-+*/]+\\w+)+)|([-+]?\\d+)")) {
+            if (input.matches("-?\\d+")) {
+                System.out.println(input);
+            } // filter for arithmetic expression or single number
+            else if (expression.matches("(.*[-+*/^].*)+")) {
 
                 List<String> vars = returnVarsFromExpression(expression);
                 String newExpression = replaceVarsWithNums(expression, varMap, vars);
 
-                System.out.println(Postfix.calculatePostfix(Postfix.convertToPostfix(newExpression)));
+                // add some error handling to postfix to say 'Invalid expression' if it gets an error
+
+                try {
+                    System.out.println(Postfix.calculatePostfix(Postfix.convertToPostfix(newExpression)));
+                } catch (NoSuchElementException e) {
+                    System.out.println("Invalid expression");
+                } catch (ArithmeticException e) {
+                    System.out.println("Invalid expression");
+                } catch (NullPointerException e) {
+                    System.out.println("Invalid expression");
+                }
 
             } else if (!(input.isEmpty())) {
                 if (input.matches(".*\\d.*")) {
@@ -92,30 +103,6 @@ public class Main {
         } else {
             System.out.println("Unknown variable");
         }
-    }
-
-
-    @Deprecated
-    // finds all tokens positive or negative and then adds them together
-    public static int calculate(String expression) {
-
-        String regex = "-?\\d+";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(expression);
-
-        List<Integer> numbers = new ArrayList<>();
-
-        while (matcher.find()) {
-            numbers.add(Integer.parseInt(matcher.group()));
-        }
-
-        int result = 0;
-
-        for (Integer number : numbers) {
-            result += number;
-        }
-
-        return result;
     }
 
     public static void fetchValueFromMap(Map<String, Integer> map, String key) {
