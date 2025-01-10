@@ -27,8 +27,8 @@ Output: 150
 * The calculator also follows order of operations
   * Ex:
 ```console
-> (5 + 3) / 2
-Output: 4
+> (-5 + 3) / 2
+Output: -1
   ```
 
 * It also has a few commands

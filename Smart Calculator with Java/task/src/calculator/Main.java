@@ -5,7 +5,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /* TODO
-    * negative numbers
+    * negative numbers (search for unary shunting yard algorithm)
+        * need to get context of previous token (i.e. was there nothing before, or was it '(' before, etc.)
     * multi-digit numbers
 */
 public class Main {
@@ -68,7 +69,7 @@ public class Main {
                 // add some error handling to postfix to say 'Invalid expression' if it gets an error
 
                 try {
-                    System.out.println(Postfix.calculatePostfix(Postfix.convertToPostfix(newExpression)));
+                    System.out.println(Postfix.calculatePostfix(newExpression));
                 } catch (NoSuchElementException e) {
                     System.out.println("Invalid expression");
                 } catch (ArithmeticException e) {
