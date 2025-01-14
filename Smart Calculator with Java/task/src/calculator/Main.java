@@ -1,17 +1,16 @@
 package calculator;
 
+import java.math.BigInteger;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/* TODO
-    * multi-digit numbers
-*/
+
 public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        var varMap = new HashMap<String, Integer>();
+        var varMap = new HashMap<String, BigInteger>();
 
         while (true) {
             String input = scanner.nextLine();
@@ -41,7 +40,7 @@ public class Main {
 
                 // variable = number
                 if (expression.matches("[a-zA-Z]+=-*\\d+")) {
-                    varMap.put(list.get(0), Integer.valueOf(list.get(1)));
+                    varMap.put(list.get(0), new BigInteger(list.get(1)));
 
                 // variable = variable
                 } else if (expression.matches("[a-zA-Z]+=[a-zA-Z]+")) {
@@ -96,7 +95,7 @@ public class Main {
 
     }
 
-    public static void addNameVarToMap(Map<String, Integer> map, String key, String varName) {
+    public static void addNameVarToMap(Map<String, BigInteger> map, String key, String varName) {
         if (map.containsKey(varName)) {
             map.put(key, map.get(varName));
         } else {
@@ -104,7 +103,7 @@ public class Main {
         }
     }
 
-    public static void fetchValueFromMap(Map<String, Integer> map, String key) {
+    public static void fetchValueFromMap(Map<String, BigInteger> map, String key) {
         if (map.containsKey(key)) {
             System.out.println(map.get(key));
         } else {
@@ -124,7 +123,7 @@ public class Main {
         return vars;
     }
 
-    public static String replaceVarsWithNums(String expression, Map<String, Integer> map, List<String> vars) {
+    public static String replaceVarsWithNums(String expression, Map<String, BigInteger> map, List<String> vars) {
         for (String var : vars) {
             if (expression.contains(var)) {
                 expression = expression.replace(var, String.valueOf(map.get(var)));

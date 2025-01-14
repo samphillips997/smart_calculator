@@ -1,5 +1,6 @@
 package calculator;
 
+import java.math.BigInteger;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -76,46 +77,46 @@ public class Postfix {
         return output;
     }
 
-    public static int calculatePostfix(String expression) {
+    public static BigInteger calculatePostfix(String expression) {
         List<String> input = convertToPostfix(expression);
 
-        Deque<Integer> stack = new ArrayDeque<>();
+        Deque<BigInteger> stack = new ArrayDeque<>();
 
         List<String> operators = Arrays.asList("+", "-", "*", "/", "^");
 
-        int result = 0;
+        BigInteger result = BigInteger.ZERO;
 
         for (String s : input) {
 
             // if element is number -> push to stack
             if (isNumeric(s)) {
-                stack.offerFirst(Integer.valueOf(s));
+                stack.offerFirst(new BigInteger(s));
                 // if element is operator -> pop twice & calculate, push result to stack
             } else if (operators.contains(s) && !s.equals("#")) {
-                int operand1 = stack.pop();
-                int operand2 = stack.pop();
+                BigInteger operand1 = stack.pop();
+                BigInteger operand2 = stack.pop();
 
                 switch (s) {
                     case "+":
-                        result = operand1 + operand2;
+                        result = operand1.add(operand2);
                         break;
                     case "-":
-                        result = operand2 - operand1;
+                        result = operand2.subtract(operand1);
                         break;
                     case "*":
-                        result = operand1 * operand2;
+                        result = operand1.multiply(operand2);
                         break;
                     case "/":
-                        result = operand2 / operand1;
+                        result = operand2.divide(operand1);
                         break;
                     case "^":
-                        result = (int) Math.pow(operand2, operand1);
+                        result = operand2.pow(operand1.intValue());
                         break;
                 }
                 stack.offerFirst(result);
             } else if (s.equals("#")) {
-                int operand = stack.pop();
-                result = operand * -1;
+                BigInteger operand = stack.pop();
+                result = operand.negate();
                 stack.offerFirst(result);
             }
         }
@@ -157,7 +158,7 @@ public class Postfix {
 
     public static boolean isNumeric(String str) {
         try {
-            Integer.parseInt(str);
+            new BigInteger(str);
             return true;
         } catch (NumberFormatException e) {
             return false;
