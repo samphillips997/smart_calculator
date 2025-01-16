@@ -7,9 +7,10 @@ import java.util.regex.Pattern;
 
 
 public class Postfix {
+    Tokenizer tokenizer = new Tokenizer();
 
-    public static List<String> convertToPostfix(String expression) {
-        List<String> input = tokenize(expression);
+    public List<String> convertToPostfix(String expression) {
+        List<String> input = tokenizer.tokenize(expression);
 
         Deque<String> stack = new ArrayDeque<>();
 
@@ -29,7 +30,7 @@ public class Postfix {
             // 1. Add numbers to result as they arrive
             if (isNumeric(s)) {
                 output.add(s);
-                // 2. If the stack is empty or contains "(" -> push to stack
+            // 2. If the stack is empty or contains "(" -> push to stack
             } else if (stack.isEmpty() || stack.peek().equals("(")) {
                 if (s.equals("-") && (output.isEmpty())) {
                     output.add(input.get(i + 1));
@@ -38,7 +39,7 @@ public class Postfix {
                 } else {
                     stack.offerFirst(s);
                 }
-                // 3. if incoming operator has higher priority -> push to stack
+            // 3. if incoming operator has higher priority -> push to stack
             } else if (operatorPriority.containsKey(s) && (operatorPriority.get(s) > operatorPriority.get(stack.peek()))) {
                 stack.offerFirst(s);
             }
@@ -77,7 +78,7 @@ public class Postfix {
         return output;
     }
 
-    public static BigInteger calculatePostfix(String expression) {
+    public BigInteger calculatePostfix(String expression) {
         List<String> input = convertToPostfix(expression);
 
         Deque<BigInteger> stack = new ArrayDeque<>();
@@ -124,37 +125,7 @@ public class Postfix {
         return stack.pop();
     }
 
-    public static List<String> tokenize(String expression) {
-        List<String> output = new ArrayList<>();
 
-        // match number or operator
-        String pattern = "\\d+|[()+\\-/*^]";
-
-        Pattern pattern1 = Pattern.compile(pattern);
-        Matcher matcher = pattern1.matcher(expression);
-
-        while (matcher.find()) {
-            output.add(matcher.group());
-        }
-
-        // make sure right amount of parentheses
-        int leftParenCount = 0;
-        int rightParenCount = 0;
-
-        for (String s : output) {
-            if (s.equals("(")) {
-                leftParenCount++;
-            } else if (s.equals(")")) {
-                rightParenCount++;
-            }
-        }
-
-        if (!(leftParenCount == rightParenCount)) {
-            throw new NoSuchElementException("Incorrect parentheses");
-        }
-
-        return output;
-    }
 
     public static boolean isNumeric(String str) {
         try {

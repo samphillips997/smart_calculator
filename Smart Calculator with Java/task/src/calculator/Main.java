@@ -12,6 +12,8 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         var varMap = new HashMap<String, BigInteger>();
 
+        Postfix postfix = new Postfix();
+
         while (true) {
             String input = scanner.nextLine();
 
@@ -55,7 +57,7 @@ public class Main {
                 continue;
             }
 
-            if (input.matches("-?\\d+")) {
+        if (input.matches("-?\\d+")) {
                 System.out.println(input);
             } // filter for arithmetic expression or single number
             else if (expression.matches("(.*[-+*/^].*)+")) {
@@ -66,7 +68,7 @@ public class Main {
                 // add some error handling to postfix to say 'Invalid expression' if it gets an error
 
                 try {
-                    System.out.println(Postfix.calculatePostfix(newExpression));
+                    System.out.println(postfix.calculatePostfix(newExpression));
                 } catch (NoSuchElementException e) {
                     System.out.println("Invalid expression");
                 } catch (ArithmeticException e) {
